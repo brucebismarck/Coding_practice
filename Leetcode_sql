@@ -161,6 +161,12 @@ If there is no second highest salary, then the query should return null.
 SELECT max(Salary) as SecondHighestSalary
 FROM Employee
 WHERE Salary < (SELECT max(Salary) FROM Employee)
+
+简便做法！！
+SELECT Salary as SecondHighestSalary
+FROM Employee
+ORDER BY Salary
+LIMIT 1,1  # LIMIT 之后第一个字用来取间隔 第二个字是真
 ##########################################################################
 # Note!!!!!!!!!!!!!  Use Max function will return 'null'
 # Other wise, it will not return null if there is no second largest entry
