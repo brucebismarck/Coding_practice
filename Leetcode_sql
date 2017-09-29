@@ -341,4 +341,83 @@ group by t.Request_at
 ############################################################################
 #这个题的难点在于 使用if 以及逻辑清楚# 或者使用 case when从句
 ############################################################################
+Question 11:
+拓展 Q9: 
+X city built a new stadium, each day many people visit it and the stats are saved as these columns: id, date, people
 
+Please write a query to display the records which have 3 or more consecutive rows and the amount of people more than 100(inclusive).
+
+For example, the table stadium:
++------+------------+-----------+
+| id   | date       | people    |
++------+------------+-----------+
+| 1    | 2017-01-01 | 10        |
+| 2    | 2017-01-02 | 109       |
+| 3    | 2017-01-03 | 150       |
+| 4    | 2017-01-04 | 99        |
+| 5    | 2017-01-05 | 145       |
+| 6    | 2017-01-06 | 1455      |
+| 7    | 2017-01-07 | 199       |
+| 8    | 2017-01-08 | 188       |
++------+------------+-----------+
+
+For the sample data above, the output is:
+
++------+------------+-----------+
+| id   | date       | people    |
++------+------------+-----------+
+| 5    | 2017-01-05 | 145       |
+| 6    | 2017-01-06 | 1455      |
+| 7    | 2017-01-07 | 199       |
+| 8    | 2017-01-08 | 188       |
++------+------------+-----------+
+############################################################################
+方法在于 使用groupby(key) 去除duplicate
+SELECT s1.* FROM stadium AS s1, stadium AS s2, stadium as s3
+    WHERE 
+    ((s1.id + 1 = s2.id
+    AND s1.id + 2 = s3.id)
+    OR 
+    (s1.id - 1 = s2.id
+    AND s1.id + 1 = s3.id)
+    OR
+    (s1.id - 2 = s2.id
+    AND s1.id - 1 = s3.id)
+    )
+    AND s1.people>=100 
+    AND s2.people>=100
+    AND s3.people>=100
+
+    GROUP BY s1.id
+ ###########################################################################
+Q12 交换座位 考察if的使用
+Mary is a teacher in a middle school and she has a table seat storing students' names and their corresponding seat ids.
+
+The column id is continuous increment.
+Mary wants to change seats for the adjacent students.
+Can you write a SQL query to output the result for Mary?
++---------+---------+
+|    id   | student |
++---------+---------+
+|    1    | Abbot   |
+|    2    | Doris   |
+|    3    | Emerson |
+|    4    | Green   |
+|    5    | Jeames  |
++---------+---------+
+For the sample input, the output is:
++---------+---------+
+|    id   | student |
++---------+---------+
+|    1    | Doris   |
+|    2    | Abbot   |
+|    3    | Green   |
+|    4    | Emerson |
+|    5    | Jeames  |
++---------+---------+
+
+##################################################################
+select
+if(id < (select count(*) from seat), if(id mod 2=0, id-1, id+1), if(id mod 2=0, id-1, id)) as id, student
+from seat
+order by id asc;
