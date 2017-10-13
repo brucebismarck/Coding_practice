@@ -421,3 +421,31 @@ select
 if(id < (select count(*) from seat), if(id mod 2=0, id-1, id+1), if(id mod 2=0, id-1, id)) as id, student
 from seat
 order by id asc;
+
+
+
+######################################################
+Q596
+There is a table courses with columns: student and class
+Please list out all classes which have more than or equal to 5 students.
++---------+------------+
+| student | class      |
++---------+------------+
+| A       | Math       |
+| B       | English    |
+| C       | Math       |
+| D       | Biology    |
+| E       | Math       |
+| F       | Computer   |
+| G       | Math       |
+| H       | Math       |
+| I       | Math       |
++---------+------------+
+OUTPUT IS Math
+这个题蛋疼的地方在于distinct 那个地方一定要有，不然过不了所有的。
+以及， having后面直接count不要在外面再select
+
+SELECT class
+FROM courses
+GROUP BY class
+HAVING COUNT(DISTINCT student) >= 5
