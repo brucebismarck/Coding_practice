@@ -373,6 +373,9 @@ For the sample data above, the output is:
 +------+------------+-----------+
 ############################################################################
 方法在于 使用groupby(key) 去除duplicate
+这个地方不使用join是因为三表join很麻烦！ ！！！  多表join强烈考虑where
+
+
 SELECT s1.* FROM stadium AS s1, stadium AS s2, stadium as s3
     WHERE 
     ((s1.id + 1 = s2.id
@@ -449,3 +452,65 @@ SELECT class
 FROM courses
 GROUP BY class
 HAVING COUNT(DISTINCT student) >= 5
+
+
+
+######################################################
+Q595
+Given a table salary, such as the one below, that has m=male and f=female values. Swap all f and m values (i.e., 
+change all f values to m and vice versa) with a single update query and no intermediate temp table.
+| id | name | sex | salary |
+|----|------|-----|--------|
+| 1  | A    | m   | 2500   |
+| 2  | B    | f   | 1500   |
+| 3  | C    | m   | 5500   |
+| 4  | D    | f   | 500    |
+
+-->
+
+| id | name | sex | salary |
+|----|------|-----|--------|
+| 1  | A    | f   | 2500   |
+| 2  | B    | m   | 1500   |
+| 3  | C    | f   | 5500   |
+| 4  | D    | m   | 500    |
+
+
+#####################################
+UPDATE salary
+SET sex = (CASE WHEN sex = 'm' THEN 'f' ELSE 'm' END)
+
+考察 update 考察 case  函数
+
+#####################################
+Q620
+X city opened a new cinema, many people would like to go to this cinema. The cinema also gives out a poster indicating the movies’ ratings and descriptions.
+Please write a SQL query to output movies with an odd numbered ID and a description that is not 'boring'. Order the result by rating.
+For example, table cinema:
++---------+-----------+--------------+-----------+
+|   id    | movie     |  description |  rating   |
++---------+-----------+--------------+-----------+
+|   1     | War       |   great 3D   |   8.9     |
+|   2     | Science   |   fiction    |   8.5     |
+|   3     | irish     |   boring     |   6.2     |
+|   4     | Ice song  |   Fantacy    |   8.6     |
+|   5     | House card|   Interesting|   9.1     |
++---------+-----------+--------------+-----------+
+
+-->
++---------+-----------+--------------+-----------+
+|   id    | movie     |  description |  rating   |
++---------+-----------+--------------+-----------+
+|   5     | House card|   Interesting|   9.1     |
+|   1     | War       |   great 3D   |   8.9     |
++---------+-----------+--------------+-----------+
+
+考察 mod函数的使用
+#####################################
+
+SELECT *
+FROM cinema
+WHERE description != 'boring' 
+AND MOD(id,2) = 1
+ORDER BY rating DESC
+#####################################
